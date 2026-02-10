@@ -1,0 +1,18 @@
+# Build output
+book/
+
+# rust-book-cn symlinks and build artifacts
+rust-book-cn/listings
+rust-book-cn/packages
+rust-book-cn/theme
+rust-book-cn/book/
+
+# Local dev files
+.claude/
+CLAUDE.md
+translation-status.json
+scan-translations.sh
+
+# OS files
+.DS_Store
+*~
