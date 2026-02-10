@@ -45,7 +45,7 @@ jobs:
             ~/.cargo/bin/
             ~/.cargo/registry/
             ~/.cargo/git/
-            packages/mdbook-trpl/target/
+            rust-book-src/packages/mdbook-trpl/target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-
 
@@ -54,6 +54,12 @@ jobs:
           if ! command -v mdbook &> /dev/null; then
             cargo install mdbook
           fi
+
+      - name: Create symlinks
+        run: |
+          ln -s ../rust-book-src/listings rust-book-cn/listings
+          ln -s ../rust-book-src/packages rust-book-cn/packages
+          ln -s ../rust-book-src/theme rust-book-cn/theme
 
       - name: Build
         run: bash build.sh
