@@ -1,8 +1,12 @@
 # Rust Book CN
 
+[![Deploy to GitHub Pages](https://github.com/d2wstudy/rust-book-cn/actions/workflows/deploy.yml/badge.svg)](https://github.com/d2wstudy/rust-book-cn/actions/workflows/deploy.yml)
+
 **Rust 程序设计语言** 中英双语版，支持中英文无刷新实时切换。
 
 基于 [官方 Rust Book](https://github.com/rust-lang/book) 构建。
+
+**在线阅读：[https://d2wstudy.github.io/rust-book-cn](https://d2wstudy.github.io/rust-book-cn)**
 
 [English](./README_EN.md)
 
