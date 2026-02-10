@@ -37,13 +37,59 @@
       oldMenuTitle.textContent = newMenuTitle.textContent;
     }
 
-    // Reload sidebar toc iframe
-    var tocIframe = document.querySelector(".sidebar-iframe-outer");
-    if (tocIframe) {
-      var tocSrc = tocIframe.getAttribute("src");
-      var newTocUrl = getTargetHref().replace(/[^/]*$/, "") + tocSrc;
-      tocIframe.setAttribute("src", newTocUrl);
-    }
+  }
+
+  function swapSidebar(targetUrl) {
+    var tocUrl = targetUrl.replace(/[^/]*$/, "") + "toc.html";
+    var basePath = targetUrl.replace(/[^/]*$/, "");
+
+    return fetch(tocUrl)
+      .then(function (res) {
+        if (!res.ok) throw new Error(res.status);
+        return res.text();
+      })
+      .then(function (html) {
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(html, "text/html");
+        var newToc = doc.querySelector("ol.chapter");
+        var scrollbox = document.querySelector("mdbook-sidebar-scrollbox");
+        if (!newToc || !scrollbox) return;
+
+        // Remove target="_parent" (iframe-only attribute)
+        newToc.querySelectorAll("a[target]").forEach(function (a) {
+          a.removeAttribute("target");
+        });
+
+        // Convert relative links to absolute
+        newToc.querySelectorAll("a").forEach(function (a) {
+          var href = a.getAttribute("href");
+          if (href && !href.startsWith("#") && !href.startsWith("http")) {
+            a.setAttribute("href", basePath + href);
+          }
+        });
+
+        // Replace sidebar content
+        scrollbox.innerHTML = newToc.outerHTML;
+
+        // Mark current page as active
+        var currentPage = targetUrl.split("#")[0].split("?")[0];
+        scrollbox.querySelectorAll("a").forEach(function (a) {
+          if (a.href === currentPage) {
+            a.classList.add("active");
+            // Expand parent items
+            var parent = a.parentElement;
+            while (parent && parent !== scrollbox) {
+              if (parent.tagName === "LI") {
+                parent.classList.add("expanded");
+              }
+              parent = parent.parentElement;
+            }
+          }
+        });
+      })
+      .catch(function () {
+        // Sidebar update failed, not critical
+      });
   }
 
   function updateSwitcherState() {
@@ -76,6 +122,7 @@
         })
         .then(function (html) {
           swapContent(html);
+          swapSidebar(targetUrl);
           history.pushState(null, "", targetUrl + hash);
           updateSwitcherState();
           content.classList.remove("lang-fade");

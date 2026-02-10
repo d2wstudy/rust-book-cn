@@ -5,8 +5,8 @@ language = "zh"
 
 [output.html]
 additional-css = ["ferris.css", "theme/2018-edition.css", "theme/semantic-notes.css", "theme/listing.css"]
-additional-js = ["ferris.js", "lang-switch.js"]
-git-repository-url = "https://github.com/rust-lang/book"
+additional-js = ["ferris.js", "lang-switch.js", "last-updated-data.js", "last-updated.js"]
+git-repository-url = "https://github.com/d2wstudy/rust-book-cn"
 
 [output.html.search]
 use-boolean-and = true

@@ -8,21 +8,26 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 BOOK_OUT="$SCRIPT_DIR/book"
 
 echo "=== Cleaning output directory ==="
-rm -rf "$BOOK_OUT"
 mkdir -p "$BOOK_OUT"
+rm -rf "$BOOK_OUT/en" "$BOOK_OUT/zh" "$BOOK_OUT/index.html"
+
+echo "=== Generating last-updated-data.js ==="
+bash "$SCRIPT_DIR/gen-last-updated.sh"
 
 echo "=== Preparing English version ==="
 cd "$SCRIPT_DIR/rust-book-src"
-# Inject lang-switch.js into submodule before building
+# Inject shared JS into submodule before building
 cp "$SCRIPT_DIR/lang-switch.js" .
-sed -i 's/additional-js = \["ferris.js"\]/additional-js = ["ferris.js", "lang-switch.js"]/' book.toml
+cp "$SCRIPT_DIR/rust-book-cn/last-updated-data.js" .
+cp "$SCRIPT_DIR/rust-book-cn/last-updated.js" .
+sed -i 's/additional-js = \["ferris.js"\]/additional-js = ["ferris.js", "lang-switch.js", "last-updated-data.js", "last-updated.js"]/' book.toml
 
 echo "=== Building English version ==="
 mdbook build -d "$BOOK_OUT/en"
 
 # Restore submodule to clean state
 git checkout -- book.toml
-rm -f lang-switch.js
+rm -f lang-switch.js last-updated-data.js last-updated.js
 
 echo "=== Building Chinese version ==="
 cd "$SCRIPT_DIR/rust-book-cn"
