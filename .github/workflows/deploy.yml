@@ -3,6 +3,17 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+    paths:
+      - 'rust-book-cn/src/**'
+      - 'rust-book-cn/book.toml'
+      - 'rust-book-cn/theme/**'
+      - 'rust-book-cn/last-updated.js'
+      - 'rust-book-src/**'
+      - 'packages/**'
+      - 'lang-switch.js'
+      - 'build.sh'
+      - 'gen-last-updated.sh'
+      - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
 permissions:
